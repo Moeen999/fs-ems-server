@@ -1,4 +1,5 @@
 import Employee from "../models/Employee.js";
+import { inngest } from "../inngest/index.js";
 
 // Check In/Out for employee
 // POST /api/attendance/checkin/checkout
@@ -31,6 +32,16 @@ export const checkInCheckOut = async (req, res) => {
         checkIn: now,
         status: isLate ? "LATE" : "PRESENT",
       });
+
+      // ! event call
+      await inngest.send({
+        name: "employee/check-out",
+        data: {
+          employeeId: employee._id,
+          attendanceId: attendance._id,
+        },
+      });
+
       return res.json({
         success: true,
         type: "CHECK_IN",
