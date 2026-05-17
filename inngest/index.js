@@ -8,8 +8,7 @@ export const inngest = new Inngest({ id: "fs-ems" });
 
 // auto checkOut function:
 const autoCheckout = inngest.createFunction(
-  { id: "auto-check-out" },
-  { event: "employee/check-out" },
+  { id: "auto-check-out", triggers: [{ event: "employee/check-out" }] },
   async ({ event, step }) => {
     const { employeeId, attendanceId } = event.data;
     // Wait for 9 hours
@@ -45,8 +44,7 @@ const autoCheckout = inngest.createFunction(
 );
 
 const leaveApplicationReminder = inngest.createFunction(
-  { id: "leave-application-reminder" },
-  { event: "leave/pending" },
+  { id: "leave-application-reminder", triggers: [{ event: "leave/pending" }] },
 
   async ({ event, step }) => {
     const { leaveApplicationId } = event.data;
@@ -68,8 +66,7 @@ const leaveApplicationReminder = inngest.createFunction(
 );
 
 const attendanceReminderCron = inngest.createFunction(
-  { id: "attendance-reminder-cron" },
-  { cron: "0 0 6 * * *" }, // 06:00 UTC = 11:30 IST
+  { id: "attendance-reminder-cron", triggers: [{ cron: "0 0 6 * * *" }] }, // 06:00 UTC = 11:30 IST
 
   async ({ step }) => {
     // Step 1: Get today's date range (IST)
