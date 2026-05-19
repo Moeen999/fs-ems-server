@@ -9,8 +9,8 @@ export const getEmployees = async (req, res) => {
     const { department } = req.query;
     const where = {};
     if (department) where.department = department;
-    const employees = (await Employee.find(where))
-      .toSorted({ createdAt: -1 })
+    const employees = await Employee.find(where)
+      .sort({ createdAt: -1 })
       .populate("userId", "email role")
       .lean();
     const result = employees.map((emp) => ({
@@ -106,13 +106,6 @@ export const updateEmployee = async (req, res) => {
     if (!employee) {
       return res.status(404).json({ error: "Employee not found." });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      email,
-      password: hashedPassword,
-      role: role || "EMPLOYEE",
-    });
 
     await Employee.findByIdAndUpdate(id, {
       firstName,
