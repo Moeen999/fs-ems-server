@@ -6,7 +6,7 @@ import Employee from "../models/Employee.js";
 export const getProfile = async (req, res) => {
     try {
         const session=req.session;
-        const employee = await Employee.findOne({userId: session.userId});
+        const employee = await Employee.findOne({userId: session.id});
         if (!employee) {
             // this user is not an employee return admin profile
             return res.json({

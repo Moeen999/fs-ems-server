@@ -8,8 +8,8 @@ import { adminOnly, protect } from "../middlewares/authMiddleware.js";
 
 const leaveRouter = Router();
 
-leaveRouter.post("/", createLeave);
-leaveRouter.get("/", getAllLeaves);
+leaveRouter.post("/", protect, createLeave);
+leaveRouter.get("/", protect, getAllLeaves);
 leaveRouter.patch("/:id", protect, adminOnly, updateLeaveStatus);
 
 export default leaveRouter;
