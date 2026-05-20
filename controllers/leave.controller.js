@@ -7,7 +7,7 @@ import LeaveApplication from "../models/LeaveApplication.js";
 export const createLeave = async (req, res) => {
   try {
     const session = req.session;
-    const employee = await Employee.findOne({ userId: session.userId });
+    const employee = await Employee.findOne({ userId: session.id });
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
     }
@@ -69,24 +69,33 @@ export const getAllLeaves = async (req, res) => {
     const session = req.session;
     const isAdmin = session.role === "ADMIN";
     if (isAdmin) {
-      const status = req.query.status;
+      const status = req.query?.status;
       const filter = status ? { status } : {};
+
       const leaves = await LeaveApplication.find(filter)
         .populate("employeeId")
         .sort({ createdAt: -1 });
       const data = leaves.map((l) => {
         const obj = l.toObject();
         return {
-          ...data,
           id: obj._id.toString(),
-          employee: obj.employeeId.name,
+          employee: obj.employeeId
+            ? `${obj.employeeId.firstName} ${obj.employeeId.lastName}`.trim()
+            : null,
           employeeId: obj.employeeId?._id?.toString(),
+          type: obj.type,
+          status: obj.status,
+          startDate: obj.startDate,
+          endDate: obj.endDate,
+          reason: obj.reason,
+          createdAt: obj.createdAt,
         };
       });
+
       return res.status(200).json({ success: true, data });
     } else {
       const employee = await Employee.findOne({
-        userId: session.userId,
+        userId: session.id,
       }).lean();
       if (!employee) {
         return res.status(404).json({ message: "Employee not found" });

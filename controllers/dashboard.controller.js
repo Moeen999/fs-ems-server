@@ -30,7 +30,7 @@ export const getDashboard = async (req, res) => {
       });
     } else {
       const employee = await Employee.findOne({
-        userId: session.userId,
+        userId: session.id,
       }).lean();
       if (!employee) {
         return res.status(404).json({ error: "Employee not found" });
@@ -59,10 +59,10 @@ export const getDashboard = async (req, res) => {
         role: "EMPLOYEE",
         employee: { ...employee, id: employee._id.toString() },
         currentMonthAttendance,
-        pendingLeaves: latestPayslip
+        pendingLeaves,
+        latestPayslip: latestPayslip
           ? { ...latestPayslip, id: latestPayslip._id.toString() }
           : null,
-        latestPayslip,
       });
     }
   } catch (error) {
