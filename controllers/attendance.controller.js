@@ -1,5 +1,6 @@
 import Employee from "../models/Employee.js";
 import { inngest } from "../inngest/index.js";
+import Attendance from "../models/Attendance.js";
 
 // Check In/Out for employee
 // POST /api/attendance/checkin/checkout
@@ -89,7 +90,7 @@ export const checkInCheckOut = async (req, res) => {
 export const getMyAttendance = async (req, res) => {
   try {
     const session = req.session;
-    const employee = await Employee.findOne({ userId: session.userId });
+    const employee = await Employee.findOne({ userId: session.id });
     if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
