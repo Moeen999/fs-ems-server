@@ -1,6 +1,7 @@
 // Create payslip
 
 import PaySlip from "../models/PaySlip.js";
+import Employee from "../models/Employee.js";
 
 // POST /api/payslips
 export const createPayslip = async (req, res) => {
@@ -11,7 +12,7 @@ export const createPayslip = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
     const netSalary =
-      basicSalary + Number(allowances || 0) - Number(deductions || 0);
+      Number(basicSalary) + Number(allowances || 0) - Number(deductions || 0);
 
     const payslip = await PaySlip.create({
       employeeId,
@@ -49,7 +50,7 @@ export const getPayslips = async (req, res) => {
       });
       return res.status(200).json({ success: true, data });
     } else {
-      const employee = await Employee.findOne({ userId: session.userId });
+      const employee = await Employee.findOne({ userId: session.id });
       if (!employee) {
         return res.status(404).json({ message: "Employee not found" });
       }
@@ -68,7 +69,9 @@ export const getPayslips = async (req, res) => {
 export const getPayslipById = async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(id);
     const payslip = await PaySlip.findById(id).populate("employeeId").lean();
+    console.log(payslip)
     if (!payslip) {
       return res.status(404).json({ message: "Payslip not found" });
     }
