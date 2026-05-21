@@ -13,7 +13,7 @@ const autoCheckout = inngest.createFunction(
   async ({ event, step }) => {
     const { employeeId, attendanceId } = event.data;
     // Wait for 9 hours
-    await step.sleepUntill(
+    await step.sleepUntil(
       "wait-for-the-9-hours",
       new Date(new Date().getTime() + 9 * 60 * 60 * 1000),
     );
@@ -40,7 +40,7 @@ const autoCheckout = inngest.createFunction(
       });
 
       // After 10 hours mark attendance as checked out with LATE status
-      await step.sleepUntill(
+      await step.sleepUntil(
         "wait-for-the-1-hour",
         new Date(new Date().getTime() + 1 * 60 * 60 * 1000),
       );
@@ -65,7 +65,7 @@ const leaveApplicationReminder = inngest.createFunction(
     const { leaveApplicationId } = event.data;
 
     // wait for 24 hours
-    await step.sleepUntill(
+    await step.sleepUntil(
       "wait-for-24-hours",
       new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
     );

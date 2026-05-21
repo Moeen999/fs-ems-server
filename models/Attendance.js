@@ -19,7 +19,7 @@ const attendanceSchema = new mongoose.Schema(
     daytype: {
       type: String,
       enum: ["Full Day", "Three Quarter Day", "Half Day", "Short Day", null],
-      default: "WEEKDAY",
+      default: null,
     },
   },
   {

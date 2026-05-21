@@ -7,7 +7,7 @@ import Attendance from "../models/Attendance.js";
 export const checkInCheckOut = async (req, res) => {
   try {
     const session = req.session;
-    const employee = await Employee.findOne({ userId: session.userId });
+    const employee = await Employee.findOne({ userId: session.id });
     if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
