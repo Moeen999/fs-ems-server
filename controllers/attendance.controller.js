@@ -34,15 +34,6 @@ export const checkInCheckOut = async (req, res) => {
         status: isLate ? "LATE" : "PRESENT",
       });
 
-      // ! event call
-      await inngest.send({
-        name: "employee/check-out",
-        data: {
-          employeeId: employee._id,
-          attendanceId: attendance._id,
-        },
-      });
-
       return res.json({
         success: true,
         type: "CHECK_IN",
@@ -65,6 +56,15 @@ export const checkInCheckOut = async (req, res) => {
       existingAttendance.workingHours = workingHours;
       existingAttendance.daytype = daytype;
       await existingAttendance.save();
+
+      // Trigger inngest event on checkout (not checkin)
+      await inngest.send({
+        name: "employee/check-out",
+        data: {
+          employeeId: employee._id,
+          attendanceId: existingAttendance._id,
+        },
+      });
 
       return res.json({
         success: true,
